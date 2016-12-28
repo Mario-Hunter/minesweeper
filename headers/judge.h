@@ -17,7 +17,7 @@ typedef struct judge {
     time_t gameStartTime;
     int gameTime;
     int moves;
-    long long int gameScore;
+    long int gameScore ;
     char user[10];
     graph_p grid;
 
@@ -38,6 +38,7 @@ extern "C" {
     void lose(judge_t *judge) ;
     char * setUser(void);
     void finishGame(judge_t *judge, int score);
+    void resetAlarm(void);
 
 
 #ifdef	__cplusplus
