@@ -3,20 +3,28 @@
 #include "judge.h"
 #include <stdio.h>
 
-void populateGraph(judge_p *judge){
-    for (int i=0; i<(getGraph(judge)->height);i++){
-        for (int j=0;j<(getGraph(judge)->width);j++){
-            int adj[8][2] = {{i,j+1},{i-1,j+1},{i-1,j},{i-1,j-1},{i,j-1},{i+1,j-1},{i+1,j},{i+1,j+1}};
-            findAdj(adj,i,j,(getGraph(judge)->height),(getGraph(judge)->width));
-            for(int k=0; k<8;k++){
-                if (adj[k][0]!=-1){
-                    
-                    addEdge(getGraph(judge),i*(getGraph(judge)->width)+j,adj[k][0]*(getGraph(judge)->width)+adj[k][1]);
+void populateGraph(judge_p *judge) {
+    for (int i = 0; i < (getGraph(judge)->height); i++) {
+        for (int j = 0; j < (getGraph(judge)->width); j++) {
+            int adj[8][2] = {
+                {i, j + 1},
+                {i - 1, j + 1},
+                {i - 1, j},
+                {i - 1, j - 1},
+                {i, j - 1},
+                {i + 1, j - 1},
+                {i + 1, j},
+                {i + 1, j + 1}};
+            findAdj(adj, i, j, (getGraph(judge)->width), (getGraph(judge)->height));
+            for (int k = 0; k < 8; k++) {
+                if (adj[k][0] != -1) {
+
+                    addEdge(getGraph(judge), i * (getGraph(judge)->width) + j, adj[k][0]*(getGraph(judge)->width) + adj[k][1]);
                 }
             }
         }
     }
-    
-   
-    return ;
+
+
+    return;
 }

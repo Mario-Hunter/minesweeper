@@ -91,6 +91,7 @@ void addEdge(graph_t *graph, int src, int dest) {
 /* Function to print the adjacency list of graph*/
 void displayGraph(graph_p graph) {
     int i;
+    printf("vertices: %d\n", graph->num_vertices);
     for (i = 0; i < graph->num_vertices; i++) {
         adjlist_node_p adjListPtr = graph->adjListArr[i].head;
         //adjlist_node_p adjListPtr = getNode(graph,i);
@@ -136,13 +137,13 @@ int getHeight(graph_p graph){
     return graph->height;
 }*/
 void setMine(graph_t *graph, int vertex) {
-    
+
     adjlist_node_p newNode = getNode(graph, vertex);
-    
+
     if (newNode) {
-        
+
         newNode->isMine = true;
-        
+
         mineNotify(graph, vertex);
     }
 }
@@ -210,23 +211,33 @@ void dfs(graph_t *graph, int v, int *explored) {
 
 
 
-    //printf("dfs called from (%d)-> starting node (%d) \n",v,w->vertex);
+    //printf("dfs called from (%d)-> starting node (%d) \n", v, w->vertex);
 
     int members = graph->adjListArr[v].num_members;
     //printf("members of %d = %d\n",v,members);
     for (int i = 0; i < members; i++) {
         //printf("is %d explored ? [ %d  ]  \n",w->vertex,explored[w->vertex]);
-        if (w && !explored[w->vertex] && !w->isMine) {
-
+        if (w && !explored[w->vertex]) {
+            if (w->isMine || w->state != 0) {
+                return;
+            }
             //openCell(graph,w->vertex);
             if (w->state != 2) {
                 graph->openedCells++;
             }
-            setState(graph, w->vertex, 2);
-            dfs(graph, w->vertex, explored);
+
+            if (getAdjacentMine(graph, w->vertex) != 0) {
+                setState(graph, w->vertex, 2);
+                explored[w->vertex] = 1;
+
+            } else {
+                setState(graph, w->vertex, 2);
+                dfs(graph, w->vertex, explored);
+            }
         }
         if (w) {
             w = w->next;
+            //w?printf("NExt is %d\n",w->vertex):printf("w is Null");
         }
     }
     return;

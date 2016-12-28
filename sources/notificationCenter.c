@@ -3,7 +3,7 @@
 
 void mineNotify(graph_t *graph,int v){
     adjlist_node_p parent = graph->adjListArr[v].head;
-    printf("mine = %d\n",v);     
+    //printf("mine = %d\n",v);     
     //displayGraph(graph);
     while(parent  != NULL){
         adjlist_node_p child =graph->adjListArr[parent->vertex].head;

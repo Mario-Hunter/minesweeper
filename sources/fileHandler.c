@@ -82,7 +82,7 @@ void saveFile(judge_t *judge) {
     game = fopen(path, "w+");
 
     fprintf(game, "%d %d %d\n", judge->grid->num_vertices, judge->grid->width, judge->grid->height);
-    fprintf(game, "%d %d\n", judge->gameTime, judge->gameScore);
+    fprintf(game, "%d %ld\n", judge->gameTime, judge->gameScore);
     for (int i = 0; i < judge->grid->num_vertices; i++) {
         adjlist_node_p node = judge->grid->adjListArr[i].head;
         int members = judge->grid->adjListArr[i].num_members;
@@ -135,10 +135,11 @@ judge_p openFile(void) {
         printf("Failed to open file");
         return;
     }
-    int numVertices, height, width, gameTime, gameScore, mines;
+    int numVertices, height, width, gameTime,  mines;
+    long int gameScore;
     fscanf(game, "%d %d %d", &numVertices, &width, &height);
     //printf("%d %d %d",numVertices,width,height);
-    fscanf(game, "%d %d\n", &gameTime, &gameScore);
+    fscanf(game, "%d %ld\n", &judge->gameTime, &judge->gameScore);
 
 
     judgeCreateGraph(judge, width, height, DIRECTED);

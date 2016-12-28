@@ -2,11 +2,16 @@
 
 #include "judge.h"
 #include "graph.h"
-int getScore(judge_t *judge){
-    time_t currentTime;
 
-    time(&currentTime);
-    judge->gameTime = getTime(currentTime, judge->gameStartTime);
-    judge->gameScore = pow(judge->grid->width,4)*pow(judge->grid->height,4)/(judge->gameTime*judge->moves);
+long int getScore(judge_t *judge) {
+    calculateTime(judge);
+    if (pow(judge->grid->width, 4) * pow(judge->grid->height, 4)<(judge->gameTime * judge->moves)) {
+        judge->gameScore = 0;
+        printf("\nTime %d \n Moves %d\n SCOOOORE %ld\n", judge->gameTime, judge->moves, judge->gameScore);
+
+        return judge->gameScore;
+    }
+    judge->gameScore = (long int) pow(judge->grid->width, 4) * pow(judge->grid->height, 4) / (judge->gameTime * judge->moves);
+    printf("\nTime %d \n Moves %d\n SCOOOORE %ld\n", judge->gameTime, judge->moves, judge->gameScore);
     return judge->gameScore;
 }

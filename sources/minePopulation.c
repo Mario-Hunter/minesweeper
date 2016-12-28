@@ -19,9 +19,9 @@ void getMinePosition(graph_p graph,int startingNode){
             pos = rand() % graph->num_vertices;
             
         }while(containsMine(graph,pos) || pos == startingNode);
-        printf("mine position: %d  \n",pos);
+        //printf("mine position: %d  \n",pos);
         plantMine(graph,pos);
-        printf("planted\n");
+        //printf("planted\n");
         
     }
     return;

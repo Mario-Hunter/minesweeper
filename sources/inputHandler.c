@@ -1,4 +1,3 @@
-#include <signal.h>
 #include <stdio.h>
 #include <ctype.h>
 #include <stdio.h>
@@ -34,6 +33,9 @@ int hash (char query[],int width,int height){
 bool validateCol(int col,int width){
     return col>=0 && col<=width;
 }
+bool validateRow(int row,int height){
+    return row>=0 && row<=height;
+}
 int hash(char query[], int width, int height) {
 
     char queryLow[100];
@@ -51,20 +53,22 @@ int hash(char query[], int width, int height) {
     //printf("length is %d\n",length);
     if (queryLow[0]>= 'a' && queryLow[0]<='z'){
         for(int i=0;queryLow[i]>= 'a' && queryLow[i]<='z';i++){
-            vertex+=(queryLow[i] - 97) * width*pow(26,rows-1-i)+width*26*(rows-1-i);
-            //printf("query of i is  vertex is %d \n",vertex);
+            vertex=vertex+ceil((queryLow[i] - 'a') * width*(pow(26,rows-1-i)));//+width*26*(rows-1-i);
+            //printf("\n\t\t\t\t %d %lf %d %d %d\n",queryLow[i] - 'a',pow(26,rows-1-i)*30,rows-1-i,width,vertex);
             //rows++;
         }
-        //printf("%d\n", vertex);
+        
         for(int i =rows;i<length;i++){
             //printf("i=%d,length=%d\n,addedValue=%f\n",i,length,pow(10,length-i-1)*(queryLow[i] - 48));
-             coloumns +=  pow(10,length-i-1)*(queryLow[i] - 48);
+             coloumns +=  ceil(pow(10,length-i-1)*(queryLow[i] - '0'));
         }
+        coloumns--;
+        printf("\n%d\n",coloumns);
         if(validateCol(coloumns,width)==false){
             printf("This cell doesn't exist\n");
             scanCell(width,height);
         }
-        vertex+=coloumns-1;
+        vertex+=coloumns;
     //printf("%d\n", vertex);
     return vertex;
     }
@@ -74,9 +78,12 @@ char scanQuery(void) {
     char query = "\n";
     printf("Enter Your query:\n[open,flag,question,unmark,save game,load game]\n[o,f,q,,u,s,l]\n");
     while (getchar() != '\n');
+    fflush(stdin);
     scanf("%c", &query);
+    resetAlarm();
     while (query == "\n" || query == " " || query == '\0') {
         scanf("%c", &query);
+        resetAlarm();
     }
     //printf("the query scanned %c\n", query);
 
@@ -107,9 +114,12 @@ int scanCell(int width,int height){
     printf("print the cell:\n");
     while (getchar() != '\n');
     scanf("%s", &cell);
-    while (cell[1] == '\0') {
+    resetAlarm();
+    printf("%c is incluseive  %d\n ",cell[1],!(cell[1]>='a'&& cell[1]<='Z'));
+    while (cell[1] == '\0' || cell[2]=='\0' || !(cell[0]>='a'&& cell[0]<='Z') || !(cell[1]>='a'&& cell[1]<='Z') ) {
         printf("Enter an appropriate cell as the instructions dictates\n");
         scanf("%s", &cell);
+        resetAlarm();
     }
     return hash(cell, width, height);
 }
@@ -125,9 +135,11 @@ void takeInput(judge_t *judge) {
     printf("print the cell:\n");
     while (getchar() != '\n');
     scanf("%s", &cell);
-    while (cell[1] == '\0') {
+    resetAlarm();
+    while (cell[1] == '\0' || cell[2]=='\0' || !(cell[0]>='A'&& cell[0]<='z') || !(cell[1]>='A'&& cell[1]<='z')) {
         printf("Enter an appropriate cell as the instructions dictates\n");
         scanf("%s", &cell);
+        resetAlarm();
     }
     graph_p grid = getGraph(judge);
     int height = grid->height;
@@ -138,6 +150,7 @@ void takeInput(judge_t *judge) {
         printf("This cell doesn't exist. More focus would help. The clock is ticking.\nprint the cell:\n");
         while (getchar() != '\n');
         scanf("%s", &cell);
+        resetAlarm();
         v = hash(cell, width, height);
     }
 
@@ -150,7 +163,6 @@ void takeInput(judge_t *judge) {
 action:
     switch (query) {
         case 'o':
-            printf("\nOpening..\n");
             openCell(judge, grid, v);
             checkWin(judge);
             break;
